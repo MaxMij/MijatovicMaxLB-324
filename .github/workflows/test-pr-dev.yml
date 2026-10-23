@@ -25,11 +25,4 @@ jobs:
         env:
           PASSWORD: test-password
           SECRET_KEY: ci-secret
-        run: python -m pytest -v --junitxml=test-results.xml
-
-      - name: Testdokument als Artefakt ablegen
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pytest-results
-          path: test-results.xml
+        run: python -m pytest -v

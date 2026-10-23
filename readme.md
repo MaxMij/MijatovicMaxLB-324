@@ -88,11 +88,17 @@ PASSWORD="MaxMij"
 
 1. Azure Portal → App Service `mijatovicmaxlb-324` öffnen.
 2. Links **Einstellungen → Umgebungsvariablen** (Application settings).
-3. Neue Anwendungseinstellung anlegen:
-   - Name: `PASSWORD`
-   - Wert: `MaxMij`
-4. Zusätzlich `SECRET_KEY` als zufälligen Wert setzen (nicht das lokale Dev-Secret).
-5. Speichern. App Service startet neu und liest die Werte zur Laufzeit über `os.getenv`.
+3. Anwendungseinstellungen anlegen:
+   - `PASSWORD` = `MaxMij` (GitHub-Benutzername, Vorgabe der LB)
+   - `SECRET_KEY` = zufälliger Wert (nicht das lokale Dev-Secret)
+   - `SCM_DO_BUILD_DURING_DEPLOYMENT` = `true`
+4. Unter **Konfiguration → Stapeleinstellungen** den Startbefehl setzen:
+
+   ```text
+   gunicorn --bind=0.0.0.0 --timeout 600 app:app
+   ```
+
+5. Speichern. App Service startet neu und liest `PASSWORD` zur Laufzeit über `os.getenv`.
 6. Für die GitHub-Action **Auslieferung nach Azure**:
    - App Service → **Download publish profile**
    - GitHub → Repo → Settings → Secrets and variables → Actions
@@ -106,7 +112,7 @@ Die `.env` liegt damit nur lokal. Azure kennt das Passwort ausschliesslich als A
 
 | Datei | Auslöser | Wirkung |
 | --- | --- | --- |
-| `.github/workflows/test-pr-dev.yml` | Pull Request **auf `dev`** | `pytest`, Testdokument als Artefakt |
+| `.github/workflows/test-pr-dev.yml` | Pull Request **auf `dev`** | nur `pytest` |
 | `.github/workflows/deploy-main.yml` | Push / Merge **auf `main`** | Tests, danach Auslieferung nach Azure |
 
 Keine weiteren Jobs. PRs auf andere Äste lösen die Test-Action nicht aus.
