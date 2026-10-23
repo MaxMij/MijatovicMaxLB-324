@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <title>Tagebbbuch</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+</head>
+<body>
+    <div class="ui container" style="margin-top: 40px;">
+        <h1 class="ui header">Tagebbbuch</h1>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="ui info message">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% if session.logged_in %}
+        <p>Angemeldet. <a href="/logout">Abmelden</a></p>
+        <form class="ui form" method="POST" action="/add_entry">
+            <div class="field">
+                <label>Neuer Eintrag</label>
+                <textarea name="content" rows="4" placeholder="Was ist heute passiert?"></textarea>
+            </div>
+            <button class="ui blue button" type="submit">Hinzufügen</button>
+        </form>
+        <h2 class="ui dividing header">Einträge</h2>
+        <div class="ui relaxed list">
+            {% for entry in entries %}
+            <div class="item">
+                <div class="content">
+                    <div class="header">{{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+                    <div class="description">{{ entry.content }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>Bitte anmelden, um das Tagebuch zu sehen.</p>
+        <a class="ui button" href="/login">Anmelden</a>
+        {% endif %}
+    </div>
+</body>
+</html>

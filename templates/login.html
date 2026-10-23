@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <title>Anmeldung – Tagebbbuch</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+</head>
+<body>
+    <div class="ui container" style="margin-top: 40px; max-width: 420px;">
+        <h1 class="ui header">Anmeldung</h1>
+        <form class="ui form" method="POST" action="/login">
+            <div class="field">
+                <label>Passwort</label>
+                <input type="password" name="password" placeholder="Passwort">
+            </div>
+            <button class="ui blue button" type="submit">Anmelden</button>
+        </form>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="ui message" style="margin-top: 1em;">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+name: Tests auf Pull Requests nach dev
+
+on:
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  test:
+    name: pytest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Abhängigkeiten installieren
+        run: pip install -r requirements.txt
+
+      - name: Tests ausführen
+        env:
+          PASSWORD: test-password
+          SECRET_KEY: ci-secret
+        run: python -m pytest -v --junitxml=test-results.xml
+
+      - name: Testdokument als Artefakt ablegen
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-results
+          path: test-results.xml
