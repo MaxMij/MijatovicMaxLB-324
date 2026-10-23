@@ -16,6 +16,7 @@ entries = []
 @dataclass
 class Entry:
     content: str
+    happiness: str = ""
     timestamp: datetime = field(default_factory=datetime.now)
 
 
@@ -46,8 +47,9 @@ def logout():
 @app.route("/add_entry", methods=["POST"])
 def add_entry():
     content = request.form.get("content")
+    happiness = request.form.get("happiness", "")
     if content:
-        entries.append(Entry(content=content))
+        entries.append(Entry(content=content, happiness=happiness))
     return redirect(url_for("index"))
 
 
