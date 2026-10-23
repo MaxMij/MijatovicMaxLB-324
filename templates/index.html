@@ -26,6 +26,15 @@
                 <label>Neuer Eintrag</label>
                 <textarea name="content" rows="4" placeholder="Was ist heute passiert?"></textarea>
             </div>
+            <div class="field">
+                <label>Stimmung</label>
+                <select name="happiness" class="ui dropdown">
+                    <option value="">keine Angabe</option>
+                    <option value="😃">😃</option>
+                    <option value="😐">😐</option>
+                    <option value="😞">😞</option>
+                </select>
+            </div>
             <button class="ui blue button" type="submit">Hinzufügen</button>
         </form>
         <h2 class="ui dividing header">Einträge</h2>
@@ -33,7 +42,7 @@
             {% for entry in entries %}
             <div class="item">
                 <div class="content">
-                    <div class="header">{{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+                    <div class="header">{{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }} {% if entry.happiness %}{{ entry.happiness }}{% endif %}</div>
                     <div class="description">{{ entry.content }}</div>
                 </div>
             </div>
