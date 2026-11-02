@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-11-02T09:27:18.869163+01:00",
+  "url": "https://mijatovicmaxlb-324-bvded0a9d4a0hucu.switzerlandnorth-01.azurewebsites.net",
+  "revision": "43b1c4c5cb40a3d5a2d784dde436683a2b1259f4",
+  "health": true,
+  "anonymous_write_rejected": true,
+  "wrong_password_rejected": true,
+  "login_and_secure_cookie": true,
+  "happiness_entry": true,
+  "logout_and_subsequent_write_rejected": true
+}
