@@ -5,16 +5,24 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
+concurrency:
+  group: azure-production
+  cancel-in-progress: false
+
 jobs:
   deploy:
     name: Azure App Service
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Repository auschecken
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Python 3.11 einrichten
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
 
@@ -23,11 +31,42 @@ jobs:
           PASSWORD: test-password
           SECRET_KEY: ci-secret
         run: |
-          pip install -r requirements.txt
+          python -m pip install -r requirements.txt
           python -m pytest -v
 
+      - name: Laufzeitdateien paketieren
+        run: python scripts/package_app.py --revision "$GITHUB_SHA"
+
+      - name: Auslieferungsartefakt mit Commit-Zuordnung aufbewahren
+        uses: actions/upload-artifact@v6
+        with:
+          name: azure-app-${{ github.sha }}
+          path: |
+            dist/app.zip
+            dist/app.zip.sha256
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Azure-Zugangsdaten prüfen
+        env:
+          AZURE_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        run: |
+          if [ -z "$AZURE_PUBLISH_PROFILE" ]; then
+            echo "::error::Repository-Secret AZURE_WEBAPP_PUBLISH_PROFILE fehlt. Siehe readme.md, Azure einrichten."
+            exit 1
+          fi
+
       - name: Nach Azure ausliefern
+        id: deploy
         uses: azure/webapps-deploy@v3
         with:
           app-name: mijatovicmaxlb-324
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: dist/app.zip
+
+      - name: Laufende Version nach der Auslieferung prüfen
+        env:
+          WEBAPP_URL: ${{ steps.deploy.outputs.webapp-url }}
+          EXPECTED_REVISION: ${{ github.sha }}
+        run: |
+          python scripts/check_deployment.py
