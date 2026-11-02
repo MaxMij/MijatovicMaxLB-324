@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tagebbbuch</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
 </head>
@@ -20,19 +21,22 @@
         {% endwith %}
 
         {% if session.logged_in %}
-        <p>Angemeldet. <a href="/logout">Abmelden</a></p>
-        <form class="ui form" method="POST" action="/add_entry">
+        <p>Angemeldet.</p>
+        <form method="POST" action="{{ url_for('logout') }}" style="margin-bottom: 1em;">
+            <button class="ui button" type="submit">Abmelden</button>
+        </form>
+        <form class="ui form" method="POST" action="{{ url_for('add_entry') }}">
             <div class="field">
-                <label>Neuer Eintrag</label>
-                <textarea name="content" rows="4" placeholder="Was ist heute passiert?"></textarea>
+                <label for="content">Neuer Eintrag</label>
+                <textarea id="content" name="content" rows="4" maxlength="5000" required placeholder="Was ist heute passiert?"></textarea>
             </div>
             <div class="field">
-                <label>Stimmung</label>
-                <select name="happiness" class="ui dropdown">
+                <label for="happiness">Stimmung</label>
+                <select id="happiness" name="happiness" class="ui dropdown">
                     <option value="">keine Angabe</option>
-                    <option value="😃">😃</option>
-                    <option value="😐">😐</option>
-                    <option value="😞">😞</option>
+                    <option value="😃">😃 Gut</option>
+                    <option value="😐">😐 Neutral</option>
+                    <option value="😞">😞 Schlecht</option>
                 </select>
             </div>
             <button class="ui blue button" type="submit">Hinzufügen</button>
@@ -43,14 +47,16 @@
             <div class="item">
                 <div class="content">
                     <div class="header">{{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }} {% if entry.happiness %}{{ entry.happiness }}{% endif %}</div>
-                    <div class="description">{{ entry.content }}</div>
+                    <div class="description" style="white-space: pre-wrap; overflow-wrap: anywhere;">{{ entry.content }}</div>
                 </div>
             </div>
+            {% else %}
+            <p>Noch keine Einträge vorhanden.</p>
             {% endfor %}
         </div>
         {% else %}
         <p>Bitte anmelden, um das Tagebuch zu sehen.</p>
-        <a class="ui button" href="/login">Anmelden</a>
+        <a class="ui button" href="{{ url_for('login') }}">Anmelden</a>
         {% endif %}
     </div>
 </body>
