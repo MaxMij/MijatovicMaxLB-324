@@ -4,9 +4,11 @@ Max Mijatović · IM24c · Modul 324 DevOps
 
 Repository: [MaxMij/MijatovicMaxLB-324](https://github.com/MaxMij/MijatovicMaxLB-324)
 
-Im Azure-Portal bestätigte App-URL: <https://mijatovicmaxlb-324-bvded0a9d4a0hucu.switzerlandnorth-01.azurewebsites.net>. **Der Livebetrieb ist noch nicht nachgewiesen.** Bei der Prüfung vom 2. November 2026 waren beide bisherigen Azure-Auslieferungen fehlgeschlagen und kein Publish-Profile-Secret im Repository vorhanden. Die tatsächliche Standarddomäne wurde inzwischen im Azure-Portal bestätigt. Python 3.11, Gunicorn-Startbefehl, HTTPS, vier App-Einstellungen und das Publish-Profile-Secret sind eingerichtet. Die Auslieferung des Korrekturstands und der Live-Nachweis folgen mit der Integration nach `main`.
+Laufende App: <https://mijatovicmaxlb-324-bvded0a9d4a0hucu.switzerlandnorth-01.azurewebsites.net>
 
-Dieses Projekt bildet die LB mit `feature/*` → `dev` → `main` ab. Die ursprüngliche Happiness-Funktion ist implementiert. Eine nachträgliche Korrektur behebt den fehlenden serverseitigen Anmeldeschutz, erweitert die Prüfungen und bereitet eine nachvollziehbare Azure-Auslieferung vor. [Prüfbericht und Kriterien](docs/PRUEFBERICHT.md) zeigen belegte Ergebnisse und ausstehende Nachweise.
+Azure ist eingerichtet und die Auslieferung erfolgreich geprüft. Der [Referenzlauf vom 2. November 2026](https://github.com/MaxMij/MijatovicMaxLB-324/actions/runs/41412558040) war einschliesslich Tests, Paketierung, Deployment und Versionsvergleich vollständig erfolgreich. Anmeldung, Stimmungseintrag, Logout und verweigerte unbefugte Schreibzugriffe wurden zusätzlich live geprüft; das [Prüfprotokoll](docs/live-check.json) enthält die Ergebnisse ohne Geheimnisse. Die aktuell laufende Revision ist unter [/healthz](https://mijatovicmaxlb-324-bvded0a9d4a0hucu.switzerlandnorth-01.azurewebsites.net/healthz) sichtbar und muss dem letzten erfolgreichen main-Deployment entsprechen.
+
+Dieses Projekt bildet die LB mit `feature/*` → `dev` → `main` ab. Die ursprüngliche Happiness-Funktion ist implementiert. Eine nachträgliche Korrektur behebt den fehlenden serverseitigen Anmeldeschutz, erweitert die Prüfungen und liefert die Anwendung mit nachvollziehbarer Versionsprüfung nach Azure aus. [Prüfbericht und Kriterien](docs/PRUEFBERICHT.md) zeigen belegte Ergebnisse und ausstehende Nachweise.
 
 ## Lokal einrichten und starten
 
@@ -94,7 +96,7 @@ Die Tests nutzen eine eigene Konfiguration und funktionieren ohne das echte loka
 
 [test-pr-dev.yml](.github/workflows/test-pr-dev.yml) reagiert ausschliesslich auf `pull_request` mit Zielast `dev`. Der einzige Job richtet Python 3.11 ein, installiert die Abhängigkeiten und führt `pytest` aus. Er formatiert, paketiert und deployt nichts. Bei neuen Commits in einem geöffneten PR werden die Tests erneut ausgeführt.
 
-Für `dev` einen Branchschutz oder ein Ruleset einrichten: Pull Request erforderlich, Statuscheck `pytest` erforderlich. Für `main` Pull Request erforderlich. In dieser Einzelarbeit keine fremde Approval verlangen. Direkte Pushes und Force-Pushes vermeiden. Diese Repository-Einstellungen sind separat von der YAML-Konfiguration zu prüfen.
+Der Branchschutz ist eingerichtet: `dev` verlangt einen Pull Request und einen erfolgreichen `pytest`-Statuscheck bei aktuellem Basisast; `main` verlangt einen Pull Request. Es ist keine fremde Approval erforderlich. Die Regeln gelten auch für Administratoren; Force-Pushes und Branchlöschungen sind gesperrt. Die automatische Branchlöschung bleibt ausgeschaltet, damit der ursprüngliche Happiness-Ast erhalten bleibt.
 
 ## Aufgabe 4 Azure einrichten
 
@@ -165,7 +167,7 @@ Nach Einrichtung von Azure und Merge nach `main`:
 
 | Meldung oder Verhalten | Prüfen |
 | --- | --- |
-| `No credentials found` | Repository-Secret fehlt oder hat den falschen Namen; aktuell die belegte ursprüngliche Fehlerursache |
+| `No credentials found` | Repository-Secret fehlt oder hat den falschen Namen; die belegte ursprüngliche Fehlerursache, inzwischen behoben |
 | Publish Profile kann nicht heruntergeladen werden oder 401 beim Deployment | SCM Basic Auth, Schulrichtlinie, vollständiges und aktuelles Profil, korrekter App-Name |
 | `ModuleNotFoundError` oder Azure-Standardseite | `SCM_DO_BUILD_DURING_DEPLOYMENT=true`, ZIP enthält `app.py` und `requirements.txt` direkt im Wurzelverzeichnis |
 | `Application Error` | Azure **Log stream**, App Settings `PASSWORD`/`SECRET_KEY`, Python-Stack und Startbefehl prüfen |
@@ -189,7 +191,7 @@ Vorhandene Belege:
 
 Die Korrektur wurde vor den neuen Codeänderungen als [Issue #4](https://github.com/MaxMij/MijatovicMaxLB-324/issues/4) mit dem Label `Qualitätsanforderung` erfasst. Neuer Ast: `feature/4-lb-quality`, Ausgangspunkt `dev` bei `274b81d`.
 
-Noch auszuführen: Korrektur pushen → PR nach `dev` mit `Refs #4` → grünen Testcheck abwarten → Merge → PR `dev` nach `main` mit `Closes #4` → nach eingerichteter Azure-Konfiguration mergen → erfolgreichen Deployment- und Live-Nachweis sichern. Das automatische Schliessen durch `Closes` erfolgt bei Integration in den Default-Ast `main`.
+Ausgeführt: [PR #5 nach `dev`](https://github.com/MaxMij/MijatovicMaxLB-324/pull/5) mit erfolgreichem `pytest`-Check → [PR #6 nach `main`](https://github.com/MaxMij/MijatovicMaxLB-324/pull/6) → [erfolgreiche Azure-Auslieferung](https://github.com/MaxMij/MijatovicMaxLB-324/actions/runs/41412558040) → Live-Prüfung. Issue #4 wurde durch die Integration in den Default-Ast `main` geschlossen. Die abschliessenden Nachweise werden unter [Issue #7](https://github.com/MaxMij/MijatovicMaxLB-324/issues/7) auf einem neuen Feature-Ast von `dev` dokumentiert.
 
 ## Abgabe
 
