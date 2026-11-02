@@ -4,7 +4,7 @@ Max Mijatović · IM24c · Modul 324 DevOps
 
 Repository: [MaxMij/MijatovicMaxLB-324](https://github.com/MaxMij/MijatovicMaxLB-324)
 
-Vorgesehene App-URL: <https://mijatovicmaxlb-324.azurewebsites.net>. **Der Livebetrieb ist noch nicht nachgewiesen.** Bei der Prüfung vom 2. November 2026 waren beide bisherigen Azure-Auslieferungen fehlgeschlagen und kein Publish-Profile-Secret im Repository vorhanden. Die tatsächliche Standarddomäne muss im Azure-Portal geprüft werden; neu angelegte Apps können einen zusätzlichen Namensbestandteil in der Domäne haben.
+Im Azure-Portal bestätigte App-URL: <https://mijatovicmaxlb-324-bvded0a9d4a0hucu.switzerlandnorth-01.azurewebsites.net>. **Der Livebetrieb ist noch nicht nachgewiesen.** Bei der Prüfung vom 2. November 2026 waren beide bisherigen Azure-Auslieferungen fehlgeschlagen und kein Publish-Profile-Secret im Repository vorhanden. Die tatsächliche Standarddomäne wurde inzwischen im Azure-Portal bestätigt. Python 3.11, Gunicorn-Startbefehl, HTTPS, vier App-Einstellungen und das Publish-Profile-Secret sind eingerichtet. Die Auslieferung des Korrekturstands und der Live-Nachweis folgen mit der Integration nach `main`.
 
 Dieses Projekt bildet die LB mit `feature/*` → `dev` → `main` ab. Die ursprüngliche Happiness-Funktion ist implementiert. Eine nachträgliche Korrektur behebt den fehlenden serverseitigen Anmeldeschutz, erweitert die Prüfungen und bereitet eine nachvollziehbare Azure-Auslieferung vor. [Prüfbericht und Kriterien](docs/PRUEFBERICHT.md) zeigen belegte Ergebnisse und ausstehende Nachweise.
 

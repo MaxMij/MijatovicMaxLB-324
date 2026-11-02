@@ -89,3 +89,11 @@ Diese Felder sind absichtlich offen, bis die Prüfung tatsächlich durchgeführt
 ## Verbleibende Grenzen
 
 Die Anwendung ist ein Einzelprozess-Prototyp mit flüchtigem Speicher. Neustarts löschen die Einträge. Die LB fordert keine Datenbankmigration; es wurden keine dauerhafte Speicherung, Mehrbenutzerverwaltung oder Skalierung umgesetzt. Ein grüner lokaler Test beweist weder vorhandene Azure-Geheimnisse noch ein erfolgreiches Deployment. Die konkreten Bewertungspunkte für die Cloud bleiben bis zum Live-Nachweis offen.
+
+## Inzwischen ausgeführte Azure-Einrichtung
+
+Die vorhandene Web-App `mijatovicmaxlb-324` liegt in `mijatovicmaxlb-324_group`, Switzerland North, im bestehenden Gratisplan F1. Die tatsächliche Domäne lautet `mijatovicmaxlb-324-bvded0a9d4a0hucu.switzerlandnorth-01.azurewebsites.net`. Linux und Python 3.11 wurden geprüft. Der dokumentierte Gunicorn-Startbefehl ist gespeichert; HTTPS Only ist aktiv.
+
+Die App Settings `PASSWORD`, `SECRET_KEY`, `SCM_DO_BUILD_DURING_DEPLOYMENT` und `WEBSITE_WEBDEPLOY_USE_SCM` wurden eingerichtet und durch Rücklesen bestätigt. Der Sitzungsschlüssel wurde zufällig erzeugt; geheime Werte werden hier nicht dokumentiert. Nach ausdrücklicher Benutzerfreigabe wurde SCM-Publish-Profile-Authentifizierung aktiviert und das Veröffentlichungsprofil direkt als `AZURE_WEBAPP_PUBLISH_PROFILE` im Repository gespeichert. Es wurde keine Profildatei im Projekt abgelegt.
+
+Diese Einrichtung behebt die fehlenden Deployment-Zugangsdaten. Ein erfolgreicher Action-Run und der Live-Funktionstest sind zum Stand dieses Abschnitts noch ausstehend.
